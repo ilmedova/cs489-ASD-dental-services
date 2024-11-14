@@ -1,0 +1,216 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ADS Dental Surgeries Appointments Management API",
+    "version": "1.0.0",
+    "description": "API for managing patient appointments for the ADS Dental Surgeries system."
+  },
+  "paths": {
+    "/adsweb/api/v1/patient/list": {
+      "get": {
+        "summary": "Get all patients",
+        "description": "Retrieve a list of all patients, including their primary addresses, sorted by last name.",
+        "responses": {
+          "200": {
+            "description": "List of patients retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PatientResponseDTO" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/patient/get/{id}": {
+      "get": {
+        "summary": "Get patient by ID",
+        "description": "Retrieve the patient information by patient ID, including primary address.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Patient data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PatientResponseDTO" }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found"
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/patient/register": {
+      "post": {
+        "summary": "Register a new patient",
+        "description": "Add a new patient to the system.",
+        "requestBody": {
+          "description": "Patient data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PatientRequestDTO" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Patient registered successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PatientResponseDTO" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/patient/update/{id}": {
+      "put": {
+        "summary": "Update patient data",
+        "description": "Update the information for a specific patient by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "description": "Updated patient data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PatientRequestDTO" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Patient updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PatientResponseDTO" }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found"
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/patient/delete/{id}": {
+      "delete": {
+        "summary": "Delete patient",
+        "description": "Delete a specific patient by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Patient deleted successfully"
+          },
+          "404": {
+            "description": "Patient not found"
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/patient/search/{searchString}": {
+      "get": {
+        "summary": "Search patients",
+        "description": "Search for patients by a string matching their name or other fields.",
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PatientResponseDTO" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/adsweb/api/v1/address/list": {
+      "get": {
+        "summary": "Get all addresses",
+        "description": "Retrieve a list of all addresses, including related patient data, sorted by city.",
+        "responses": {
+          "200": {
+            "description": "List of addresses retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AddressDTO" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PatientRequestDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "primaryAddress": { "$ref": "#/components/schemas/AddressDTO" }
+        },
+        "required": ["firstName", "lastName"]
+      },
+      "PatientResponseDTO": {
+        "type": "object",
+        "properties": {
+          "patientId": { "type": "integer" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "primaryAddress": { "$ref": "#/components/schemas/AddressDTO" }
+        }
+      },
+      "AddressDTO": {
+        "type": "object",
+        "properties": {
+          "addressId": { "type": "integer" },
+          "city": { "type": "string" },
+          "street": { "type": "string" },
+          "postalCode": { "type": "string" }
+        }
+      }
+    }
+  }
+}
